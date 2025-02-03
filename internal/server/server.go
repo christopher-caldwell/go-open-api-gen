@@ -23,7 +23,7 @@ func NewServer() *http.Server {
 	r := chi.NewMux()
 	r.Use(middleware.Logger)
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"http://localhost:5173/"},
+		AllowedOrigins: []string{"http://localhost:5173"},
 	}))
 
 	ping.RegisterPingHandlers(r)

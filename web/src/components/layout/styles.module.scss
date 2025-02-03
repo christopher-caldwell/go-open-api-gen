@@ -1,0 +1,10 @@
+.activeLink {
+  // color: var(--mantine-color-red-6) !important;
+  border-bottom: 1px solid red !important;
+  font-weight: bold;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}
