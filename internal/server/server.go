@@ -2,11 +2,9 @@ package server
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"openapigen/internal/api"
 	"openapigen/internal/ping"
 	"os"
 	"os/signal"
@@ -19,14 +17,8 @@ import (
 	"github.com/go-chi/cors"
 )
 
-// ensure that we've conformed to the `ServerInterface` with a compile-time check
-var _ api.ServerInterface = (*Server)(nil)
-
-type Server struct{}
-
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
-	NewServer := &Server{}
 
 	r := chi.NewMux()
 	r.Use(middleware.Logger)
@@ -34,12 +26,12 @@ func NewServer() *http.Server {
 		AllowedOrigins: []string{"http://localhost:5173/"},
 	}))
 
-	h := api.HandlerFromMux(NewServer, r)
+	ping.RegisterPingHandlers(r)
 
 	// Declare Server config
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", port),
-		Handler:      h,
+		Handler:      r,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
@@ -47,14 +39,6 @@ func NewServer() *http.Server {
 
 	return server
 
-}
-
-// (GET /ping)
-func (Server) GetPing(w http.ResponseWriter, r *http.Request) {
-	resp := ping.PingService()
-
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(resp)
 }
 
 func GracefulShutdown(apiServer *http.Server, done chan bool) {
