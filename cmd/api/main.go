@@ -8,6 +8,8 @@ import (
 	"openapigen/internal/server"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 )
 
 func main() {
@@ -15,6 +17,10 @@ func main() {
 	httpServer := server.NewServer()
 
 	r := chi.NewMux()
+	r.Use(middleware.Logger)
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins: []string{"http://localhost:5173/"},
+	}))
 
 	// get an `http.Handler` that we can use
 	h := api.HandlerFromMux(httpServer, r)
