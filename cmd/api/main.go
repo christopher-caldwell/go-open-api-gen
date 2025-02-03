@@ -1,35 +1,33 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
-	"openapigen/internal/api"
 	"openapigen/internal/server"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// create a type that satisfies the `api.ServerInterface`, which contains an implementation of every operation from the generated code
-	httpServer := server.NewServer()
 
-	r := chi.NewMux()
-	r.Use(middleware.Logger)
-	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"http://localhost:5173/"},
-	}))
-
-	// get an `http.Handler` that we can use
-	h := api.HandlerFromMux(httpServer, r)
-
-	s := &http.Server{
-		Handler: h,
-		Addr:    "0.0.0.0:8080",
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
 	}
 
-	// And we serve HTTP until the world ends.
-	log.Fatal(s.ListenAndServe())
+	done := make(chan bool, 1)
+	apiServer := server.NewServer()
+	go server.GracefulShutdown(apiServer, done)
+
+	err = apiServer.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		panic(fmt.Sprintf("http server error: %s", err))
+	}
+
+	// Wait for the graceful shutdown to complete
+	<-done
+	log.Println("Graceful shutdown complete.")
+
 }

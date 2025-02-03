@@ -1,0 +1,9 @@
+# Web
+web/*.log
+web/node_modules
+web/dist
+
+# Editor directories and files
+.vscode/*
+.idea
+.DS_Store
