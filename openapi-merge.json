@@ -1,0 +1,8 @@
+{
+  "inputs": [
+    {
+      "inputFile": "./internal/ping/ping.openapi.yaml"
+    }
+  ],
+  "output": "./openapi.yaml"
+}

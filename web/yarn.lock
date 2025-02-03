@@ -1163,7 +1163,7 @@ openapi-typescript-helpers@^0.0.15:
 
 openapi-typescript@^7.6.1:
   version "7.6.1"
-  resolved "https://registry.yarnpkg.com/openapi-typescript/-/openapi-typescript-7.6.1.tgz#e39d1e21ebf43f91712703f7063118246d099d19"
+  resolved "https://registry.npmjs.org/openapi-typescript/-/openapi-typescript-7.6.1.tgz#e39d1e21ebf43f91712703f7063118246d099d19"
   integrity sha512-F7RXEeo/heF3O9lOXo2bNjCOtfp7u+D6W3a3VNEH2xE6v+fxLtn5nq0uvUcA1F5aT+CMhNeC5Uqtg5tlXFX/ag==
   dependencies:
     "@redocly/openapi-core" "^1.28.0"
